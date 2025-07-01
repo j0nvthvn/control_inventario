@@ -3,29 +3,28 @@ import {supabase} from "../index"
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({children})=>{
-    const [user, setUser] = useState([]);
+    const [user, setUser] = useState(null);
     useEffect(()=>{
-        const {data:authListener} = supabase.auth.
-        onAuthStateChange((event, session)=>{  
+        const {data:authListener} = supabase.auth.onAuthStateChange(
             async (event, session)=>{
-                console.log(event, session)
+                console.log(event, session);
                 if(session?.user==null){
                     setUser(null)
                 }else{
-                    setUser(session?.user)
+                    setUser(session?.user);
                 }
             }
-        })
+        );
         return () => {
-            authListener.subscription;
-        }
-    },[])
+            authListener.subscription.unsubscribe();
+        };
+    },[]);
     return (
         <AuthContext.Provider value={{user}}>
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};
 export const UserAuth =()=>{
     return useContext(AuthContext)
-}
+};

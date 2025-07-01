@@ -74,14 +74,14 @@ z-index: 100;
 
 .toggle {
     position: relative;
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: 6px;
     transition-duration: .5s;
     &.active {
         transition-duration: .5s;
@@ -112,7 +112,7 @@ z-index: 100;
 .bars {
     width: 100%;
     height: 4px;
-    background-color: rgb(176, 92, 255);
+    background-color: ${(props) => props.theme.text};
     border-radius: 4px;
 }
 
