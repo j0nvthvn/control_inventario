@@ -1,19 +1,24 @@
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import styled, { ThemeProvider } from 'styled-components';
-import { AuthContextProvider, MyRoutes, Light, Dark, Sidebar, MenuHambur } from "./index"
+import { AuthContextProvider, MyRoutes, Light, Dark, Sidebar, MenuHambur, Login } from "./index"
 import { useState } from 'react';
 import { Device } from "./styles/breackpoints"
 import { ThemeContext } from "./context/ThemeContext"
+import {useLocation } from "react-router-dom";
 function App() {
   const [themeuse, setTheme] = useState("dark");
   const theme = themeuse === "light" ? "light" : "dark";
   const themeStyle = theme === "light" ? Light : Dark;
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const {pathname} = useLocation();
   return (
     <>
       <ThemeContext.Provider value = {{theme, setTheme}}>
         <ThemeProvider theme = {themeStyle}>
           <AuthContextProvider>
-            <Container className={sidebarOpen ? "active" : ""}>
+            {
+              pathname != "/login" ? (
+              <Container className={sidebarOpen ? "active" : ""}>
               <section className="ContentSidebar">
                 <Sidebar state={sidebarOpen} setState = {()=>setSidebarOpen(!sidebarOpen)}/>
               </section>
@@ -21,7 +26,11 @@ function App() {
               <section className="ContentRoutes">
                 <MyRoutes />
               </section>
-            </Container>
+              </Container>) : (
+              <Login/>
+            )}
+            
+            <ReactQueryDevtools initialIsOpen={false} />
           </AuthContextProvider>
         </ThemeProvider>
 

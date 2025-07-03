@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { supabase } from "../supabase/supabase.config"
 export const useAuthStore = create((set,get) => ({
     signInWithEmail: async (p) => {
         const { data, error } = await supabase.auth.
@@ -9,6 +10,7 @@ export const useAuthStore = create((set,get) => ({
         if(error) {
             return null;
         }
+        return data.user;
     },
     signOut:  async () => {
         const { error } = await supabase.auth.signOut()
