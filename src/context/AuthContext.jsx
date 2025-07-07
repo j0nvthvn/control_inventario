@@ -3,42 +3,25 @@ import {supabase} from "../index"
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({children})=>{
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
-    
+    const [user, setUser] = useState([]);
     useEffect(()=>{
-        // Verificar sesión existente al cargar
-        const getSession = async () => {
-            const { data: { session } } = await supabase.auth.getSession();
-            if (session?.user) {
-                setUser(session.user);
-            }
-            setLoading(false);
-        };
-        
-        getSession();
-        
-        // Escuchar cambios en la autenticación
         const {data:authListener} = supabase.auth.onAuthStateChange(
             async (event, session)=>{
                 console.log(event, session);
                 if(session?.user==null){
                     setUser(null)
                 }else{
+                    console.log("data del usuario",session?.user);
                     setUser(session?.user);
                 }
-                setLoading(false);
             }
         );
         return () => {
-            authListener.subscription.unsubscribe();
+            authListener.subscription;
         };
     },[]);
-    
     return (
-        <AuthContext.Provider value={{user, loading}}>
-            {children}
-        </AuthContext.Provider>
+        <AuthContext.Provider value={{ user }}>{children}</AuthContext.Provider>
     );
 };
 export const UserAuth =()=>{
